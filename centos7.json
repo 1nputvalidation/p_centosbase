@@ -1,0 +1,50 @@
+{
+    "builders": [{
+      "type": "vsphere-iso",
+      "name": "vSphere",
+      "vcenter_server": "{{user `vsphere_host`}}",
+      "username": "{{user `vsphere_user`}}",
+      "password": "{{user `vsphere_pass`}}",
+      "insecure_connection": "{{user `insecure_con`}}",
+      "vm_name": "centos-7-{{timestamp}}",
+      "host": "{{user `esxi_host`}}",
+      "datastore": "{{user `vsphere_datastore`}}",
+      "cluster": "{{user `vsphere_cluster`}}",
+      "folder": "{{user `vsphere_folder`}}", 
+      "guest_os_type": "centos7_64Guest",
+      "ssh_timeout": "5m",
+      "ssh_username": "{{user `ssh_user`}}",
+      "ssh_password": "{{user `ssh_pass`}}",
+      "CPUs": "{{user `cpus`}}",
+      "RAM":  "{{user `ram`}}",
+      "RAM_reserve_all": true,
+      "disk_controller_type":  "pvscsi",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_thin_provisioned": true,
+      "network": "{{user `network`}}",
+      "network_card": "vmxnet3",
+      "iso_paths": [
+        "{{user `iso_loc`}}"
+      ],
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "floppy_dirs": "{{user `floppy_dirs`}}",
+      "boot_wait": "5s",
+      "boot_command": [
+        "<esc>",
+        "<wait>",
+        "linux inst.ks=hd:fd0:/files/kickstart.cfg biosdevname=0 net.ifnames=0",
+        "<enter>"
+      ],
+      "shutdown_command": "sudo systemctl poweroff"
+    }],
+    "provisioners": [{
+        "type": "shell",
+        "inline": "ls /"
+    },
+  {
+    "type": "shell",
+    "script": "./scripts/start.sh"
+  }]
+}
+
